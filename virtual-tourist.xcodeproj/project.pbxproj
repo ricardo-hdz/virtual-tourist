@@ -16,6 +16,10 @@
 		E64C6AEF1BC9A6F700FA8EB9 /* virtual_touristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64C6AEE1BC9A6F700FA8EB9 /* virtual_touristUITests.swift */; };
 		E64C6AFD1BCAEC8500FA8EB9 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64C6AFC1BCAEC8500FA8EB9 /* MapController.swift */; settings = {ASSET_TAGS = (); }; };
 		E64C6B021BCB037400FA8EB9 /* LocationPhotosController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64C6B011BCB037400FA8EB9 /* LocationPhotosController.swift */; settings = {ASSET_TAGS = (); }; };
+		E6B232411BCB318F0025BEA4 /* NetworkRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232401BCB318F0025BEA4 /* NetworkRequestHelper.swift */; settings = {ASSET_TAGS = (); }; };
+		E6B232431BCB349F0025BEA4 /* NetworkUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232421BCB349F0025BEA4 /* NetworkUtilities.swift */; settings = {ASSET_TAGS = (); }; };
+		E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */; settings = {ASSET_TAGS = (); }; };
+		E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +55,10 @@
 		E64C6AF01BC9A6F700FA8EB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E64C6AFC1BCAEC8500FA8EB9 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		E64C6B011BCB037400FA8EB9 /* LocationPhotosController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPhotosController.swift; sourceTree = "<group>"; };
+		E6B232401BCB318F0025BEA4 /* NetworkRequestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequestHelper.swift; sourceTree = "<group>"; };
+		E6B232421BCB349F0025BEA4 /* NetworkUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkUtilities.swift; sourceTree = "<group>"; };
+		E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequestConstants.swift; sourceTree = "<group>"; };
+		E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +159,10 @@
 		E64C6B001BCAEEAE00FA8EB9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E6B232401BCB318F0025BEA4 /* NetworkRequestHelper.swift */,
+				E6B232421BCB349F0025BEA4 /* NetworkUtilities.swift */,
+				E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */,
+				E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -286,6 +298,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */,
+				E6B232411BCB318F0025BEA4 /* NetworkRequestHelper.swift in Sources */,
+				E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */,
+				E6B232431BCB349F0025BEA4 /* NetworkUtilities.swift in Sources */,
 				E64C6AD11BC9A6F700FA8EB9 /* ViewController.swift in Sources */,
 				E64C6AFD1BCAEC8500FA8EB9 /* MapController.swift in Sources */,
 				E64C6ACF1BC9A6F700FA8EB9 /* AppDelegate.swift in Sources */,

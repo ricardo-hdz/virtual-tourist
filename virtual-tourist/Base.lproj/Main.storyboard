@@ -16,7 +16,7 @@
                     <connections>
                         <segue destination="Mpz-BH-fdm" kind="show" id="azj-Eh-iSh"/>
                         <segue destination="T1p-pg-xMr" kind="show" identifier="showPhotoLocations" id="Quz-hB-nTL"/>
-                        <segue destination="Mpz-BH-fdm" kind="relationship" relationship="rootViewController" id="Gpl-JY-wNA"/>
+                        <segue destination="T1p-pg-xMr" kind="relationship" relationship="rootViewController" id="xa7-hg-Ozd"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xwa-7B-13s" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -223,6 +223,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="azj-Eh-iSh"/>
+        <segue reference="xa7-hg-Ozd"/>
     </inferredMetricsTieBreakers>
 </document>
