@@ -21,11 +21,13 @@ extension NetworkRequestHelper {
             static let LAT = "lat"
             static let FORMAT = "format"
             static let JSON_CALLBACK = "nojsoncallback"
+            static let EXTRAS = "extras"
         }
         
         struct SEARCH_PHOTOS_ARG_VALUES {
             static let FORMAT = "json"
             static let JSON_CALLBACK = "1"
+            static let EXTRAS = "url_m"
         }
         
         struct SEARCH_PHOTOS_RESPONSE_KEYS {

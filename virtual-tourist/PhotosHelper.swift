@@ -19,6 +19,7 @@ class PhotosHelper: NSObject {
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LAT: lat,
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LON: lon,
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.FORMAT: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.FORMAT,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.EXTRAS: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS,
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.JSON_CALLBACK: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.JSON_CALLBACK
         ]
         
@@ -37,11 +38,11 @@ class PhotosHelper: NSObject {
                     totalPhotos = (numPhotos as NSString).integerValue
                 }
                 
+                var photoCollection = [[String: AnyObject]]()
                 if (totalPhotos > 0) {
-                    let photoCollection = photos.valueForKey(NetworkRequestHelper.Constants.SEARCH_PHOTOS_RESPONSE_KEYS.PHOTO) as! [[String: AnyObject]]
-                    callback(photos: photoCollection, error: nil)
+                    photoCollection = photos.valueForKey(NetworkRequestHelper.Constants.SEARCH_PHOTOS_RESPONSE_KEYS.PHOTO) as! [[String: AnyObject]]
                 }
-                callback(photos: [[String: AnyObject]](), error: nil)
+                callback(photos: photoCollection, error: nil)
             }
         }
     }
