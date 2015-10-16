@@ -9,12 +9,17 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
 class MapController: UIViewController, UINavigationControllerDelegate, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var deletePinsButton: UIButton!
+    
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }()
     
     var isEditingPins: Bool = false
     
@@ -95,6 +100,15 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
             controller.locationCoordinate = (view.annotation?.coordinate)!
             self.navigationController?.pushViewController(controller, animated: true)
         }
+    }
+    
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        print("Map changed to new region")
+        print("Latitude: \(mapView.region.center.latitude)")
+        print("Longitude: \(mapView.region.center.longitude)")
+        print("Latitude Delta: \(mapView.region.span.latitudeDelta)")
+        print("Longitude Delta: \(mapView.region.span.longitudeDelta)")
     }
     
 }
