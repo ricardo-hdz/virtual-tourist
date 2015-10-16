@@ -22,12 +22,15 @@ extension NetworkRequestHelper {
             static let FORMAT = "format"
             static let JSON_CALLBACK = "nojsoncallback"
             static let EXTRAS = "extras"
+            static let PER_PAGE = "per_page"
+            static let PAGE = "page"
         }
         
         struct SEARCH_PHOTOS_ARG_VALUES {
             static let FORMAT = "json"
             static let JSON_CALLBACK = "1"
             static let EXTRAS = "url_m"
+            static let PER_PAGE = "3"
         }
         
         struct SEARCH_PHOTOS_RESPONSE_KEYS {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E622A71A1BD07DD200D3E4CD /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E622A7191BD07DD200D3E4CD /* CoreDataStackManager.swift */; settings = {ASSET_TAGS = (); }; };
 		E64C6ACF1BC9A6F700FA8EB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64C6ACE1BC9A6F700FA8EB9 /* AppDelegate.swift */; };
 		E64C6AD41BC9A6F700FA8EB9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E64C6AD21BC9A6F700FA8EB9 /* Main.storyboard */; };
 		E64C6AD61BC9A6F700FA8EB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E64C6AD51BC9A6F700FA8EB9 /* Assets.xcassets */; };
@@ -20,7 +21,6 @@
 		E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */; settings = {ASSET_TAGS = (); }; };
 		E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		E6B2324B1BCDD3A70025BEA4 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B2324A1BCDD3A70025BEA4 /* PhotoCell.swift */; settings = {ASSET_TAGS = (); }; };
-		E6B2324D1BCDD65A0025BEA4 /* PhotoCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B2324C1BCDD65A0025BEA4 /* PhotoCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E622A7191BD07DD200D3E4CD /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		E64C6ACB1BC9A6F700FA8EB9 /* virtual-tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "virtual-tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64C6ACE1BC9A6F700FA8EB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E64C6AD31BC9A6F700FA8EB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequestConstants.swift; sourceTree = "<group>"; };
 		E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHelper.swift; sourceTree = "<group>"; };
 		E6B2324A1BCDD3A70025BEA4 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
-		E6B2324C1BCDD65A0025BEA4 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +111,7 @@
 		E64C6ACD1BC9A6F700FA8EB9 /* virtual-tourist */ = {
 			isa = PBXGroup;
 			children = (
+				E622A7191BD07DD200D3E4CD /* CoreDataStackManager.swift */,
 				E64C6B001BCAEEAE00FA8EB9 /* Model */,
 				E64C6AFF1BCAEEA900FA8EB9 /* View */,
 				E64C6AFE1BCAEEA300FA8EB9 /* Controller */,
@@ -146,7 +147,6 @@
 			children = (
 				E64C6AFC1BCAEC8500FA8EB9 /* MapController.swift */,
 				E64C6B011BCB037400FA8EB9 /* LocationPhotosController.swift */,
-				E6B2324C1BCDD65A0025BEA4 /* PhotoCollectionViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -303,9 +303,9 @@
 			files = (
 				E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */,
 				E6B232411BCB318F0025BEA4 /* NetworkRequestHelper.swift in Sources */,
+				E622A71A1BD07DD200D3E4CD /* CoreDataStackManager.swift in Sources */,
 				E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */,
 				E6B232431BCB349F0025BEA4 /* NetworkUtilities.swift in Sources */,
-				E6B2324D1BCDD65A0025BEA4 /* PhotoCollectionViewController.swift in Sources */,
 				E6B2324B1BCDD3A70025BEA4 /* PhotoCell.swift in Sources */,
 				E64C6AFD1BCAEC8500FA8EB9 /* MapController.swift in Sources */,
 				E64C6ACF1BC9A6F700FA8EB9 /* AppDelegate.swift in Sources */,

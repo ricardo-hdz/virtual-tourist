@@ -10,4 +10,14 @@ import UIKit
 
 class PhotoCell: UICollectionViewCell {
     @IBOutlet weak var photo: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    override var highlighted: Bool {
+        didSet {
+            if highlighted {
+                self.layer.opacity = 0.5
+            } else {
+                self.layer.opacity = 1.0
+            }
+        }
+    }
 }

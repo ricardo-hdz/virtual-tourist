@@ -10,7 +10,7 @@ import Foundation
 
 class PhotosHelper: NSObject {
 
-    class func getPhotosByLocation(lat: String, lon: String, callback: (photos: [[String: AnyObject]]?, error: NSError?) -> Void) {
+    class func getPhotosByLocation(lat: String, lon: String, page: String, callback: (photos: [[String: AnyObject]]?, error: NSError?) -> Void) {
         let requestHelper = NetworkRequestHelper.getInstance()
         
         let requestParams = [
@@ -20,7 +20,9 @@ class PhotosHelper: NSObject {
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LON: lon,
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.FORMAT: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.FORMAT,
             NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.EXTRAS: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.JSON_CALLBACK: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.JSON_CALLBACK
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.JSON_CALLBACK: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.JSON_CALLBACK,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PER_PAGE: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.PER_PAGE,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PAGE: page
         ]
         
         let urlString: String = NetworkRequestHelper.Constants.FLICKR_API + requestHelper.escapeParams(requestParams)

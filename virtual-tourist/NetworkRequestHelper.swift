@@ -24,16 +24,10 @@ class NetworkRequestHelper: NSObject {
     }
     
     func serviceRequest(serviceEndpoint: String, requestMethod: String, headers: NSMutableDictionary, jsonBody: [String:AnyObject]?, postProcessor: ((data: AnyObject) -> NSData)?, callback: (result: AnyObject?, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        print("Starting request")
-        print("Service endpoint: \(serviceEndpoint)")
         let url = NSURL(string: serviceEndpoint)
-        
-        print("URL in trequest: \(url!)")
         
         let request = NSMutableURLRequest(URL: url!)
         request.HTTPMethod = requestMethod
-        
-        print("Setting headers")
         
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
