@@ -25,6 +25,8 @@
 		E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */; settings = {ASSET_TAGS = (); }; };
 		E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		E6B2324B1BCDD3A70025BEA4 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B2324A1BCDD3A70025BEA4 /* PhotoCell.swift */; settings = {ASSET_TAGS = (); }; };
+		E6E4FED51BD1E85F00ADAEF2 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E4FED41BD1E85F00ADAEF2 /* DataHelper.swift */; settings = {ASSET_TAGS = (); }; };
+		E6E4FED71BD3FFA900ADAEF2 /* CacheHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E4FED61BD3FFA900ADAEF2 /* CacheHelper.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,8 @@
 		E6B232461BCB3B160025BEA4 /* NetworkRequestConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequestConstants.swift; sourceTree = "<group>"; };
 		E6B232481BCB40FF0025BEA4 /* PhotosHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosHelper.swift; sourceTree = "<group>"; };
 		E6B2324A1BCDD3A70025BEA4 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		E6E4FED41BD1E85F00ADAEF2 /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
+		E6E4FED61BD3FFA900ADAEF2 /* CacheHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +159,8 @@
 			children = (
 				E64C6AFC1BCAEC8500FA8EB9 /* MapController.swift */,
 				E64C6B011BCB037400FA8EB9 /* LocationPhotosController.swift */,
+				E6E4FED41BD1E85F00ADAEF2 /* DataHelper.swift */,
+				E6E4FED61BD3FFA900ADAEF2 /* CacheHelper.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -314,8 +320,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6B232471BCB3B160025BEA4 /* NetworkRequestConstants.swift in Sources */,
+				E6E4FED71BD3FFA900ADAEF2 /* CacheHelper.swift in Sources */,
 				E622A71F1BD0A54E00D3E4CD /* Pin.swift in Sources */,
 				E6B232411BCB318F0025BEA4 /* NetworkRequestHelper.swift in Sources */,
+				E6E4FED51BD1E85F00ADAEF2 /* DataHelper.swift in Sources */,
 				E622A71A1BD07DD200D3E4CD /* CoreDataStackManager.swift in Sources */,
 				E6B232491BCB40FF0025BEA4 /* PhotosHelper.swift in Sources */,
 				E622A71D1BD09C7A00D3E4CD /* virtual-tourist.xcdatamodeld in Sources */,

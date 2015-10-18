@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
 //UICollectionViewDelegate, UICollectionViewDataSource
 class LocationPhotosController: UIViewController, UINavigationControllerDelegate, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -16,11 +17,13 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     let sectionInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     var locationCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D()
-    var photoCollection = [[String: AnyObject]]()
+    //var photoCollection = [[String: AnyObject]]()
     var currentPhotoPage: Int = 1
     
     var isEditingCollection: Bool = false
     var isLoadingPhotos: Bool = true
+    
+    var photoData = [Photo]()
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var newCollectionButton: UIButton!
@@ -31,6 +34,10 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var imagesNotFoundLabel: UILabel!
+    
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,11 +52,17 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         //locationCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         displaySelectedLocation()
         //activityIndicator.startAnimating()
-        requestPhotosForLocation()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        //
+        
+        photoData = fetchPhotos()
+
+        if (photoData.count > 0) {
+            // Display photos from context
+            print("Reloading photos")
+            self.photoCollectionView.reloadData()
+        } else {
+            requestPhotosForLocation()
+        }
+        
     }
     
     func setNavigationItems() {
@@ -73,6 +86,10 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         self.view.addSubview(photoCollectionView)
     }
     
+    func fetchPhotos() -> [Photo] {
+        return DataHelper.getInstance().fetchData("Photo") as! [Photo]
+    }
+    
     func displaySelectedLocation() {
         let annotation = MKPointAnnotation()
         let mapSpan = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
@@ -93,7 +110,7 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     @IBAction func removePhotosAction(sender: AnyObject) {
         let selectedPhotos = photoCollectionView.indexPathsForSelectedItems()
         for index in selectedPhotos! {
-            photoCollection.removeAtIndex(index.row)
+            photoData.removeAtIndex(index.row)
         }
         photoCollectionView.performBatchUpdates({self.photoCollectionView.deleteItemsAtIndexPaths(selectedPhotos!)}) { completion in
             print("Photos removed")
@@ -104,6 +121,7 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     }
     
     func requestPhotosForLocation() {
+        print("Requsting photos")
         let pageId = String(currentPhotoPage)
 
         PhotosHelper.getPhotosByLocation("\(locationCoordinate.latitude)", lon: "\(locationCoordinate.longitude)", page: pageId) { photos, error in
@@ -113,22 +131,40 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                 print("Error: " + error.localizedDescription)
                 //self.activityIndicator.stopAnimating()
             } else {
-                self.photoCollection = photos!
-                print("Retrieved \(photos?.count) photos for lat \(self.locationCoordinate.latitude) and longitude \(self.locationCoordinate.longitude)")
-                print("Photos: \(self.photoCollection)")
-                dispatch_async(dispatch_get_main_queue(), {
-                    if self.photoCollection.count > 0 {
+                if photos?.count > 0 {
+                    self.savePhotosInContext(photos!)
+                    dispatch_async(dispatch_get_main_queue(), {
                         self.photoCollectionView.reloadData()
                         self.photoCollectionView.hidden = false
                         self.newCollectionButton.enabled = true
-                    } else {
+                    })
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.photoCollectionView.hidden = true
                         self.imagesNotFoundLabel.hidden = false
-                    }
-                    //self.activityIndicator.stopAnimating()
-                })
+                    })
+                }
             }
             self.isLoadingPhotos = false
         }
+    }
+    
+    func savePhotosInContext(photos: [[String: AnyObject]]) {
+        print("Saving photos in context: \(photos.count)")
+        for photo in photos {
+            let url = photo[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS] as! String
+
+            let dictionary: [String: String] = [
+                "url": url
+            ]
+            let newPhoto = Photo(dictionary: dictionary, context: sharedContext)
+
+            photoData.append(newPhoto)
+            print("Saved photos : \(photoData.count)")
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+
+        print("Photos saved in context")
     }
     
     func backAction() {
@@ -138,12 +174,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     // Collection View Delegate Methods
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // TODO pass a placeholder
-        var totalPhotos = 5
-        if !isLoadingPhotos {
-            totalPhotos = photoCollection.count
-        }
-        return totalPhotos
+        print("Returning total photos: \(photoData.count)")
+        return photoData.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -151,17 +183,17 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         let collectionPhoto = collectionView.dequeueReusableCellWithReuseIdentifier(photoId, forIndexPath: indexPath) as! PhotoCell
         collectionPhoto.backgroundColor = UIColor.grayColor()
 
-        if !isLoadingPhotos {
-            let photo = photoCollection[indexPath.row]
-            //let title = photo["title"] as! String
-            let photoUrlString = photo[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS] as! String
-            let photoUrl = NSURL(string: photoUrlString)
+        if (indexPath.row < photoData.count) {
+            let photo = photoData[indexPath.row]
+            let photoUrl = NSURL(string: photo.url)
+            
+            //TODO
+            // Check if image has document if not request
             if let image = NSData(contentsOfURL: photoUrl!) {
                 collectionPhoto.activityIndicator.stopAnimating()
                 collectionPhoto.photo.image = UIImage(data: image)
             }
         }
-        
         return collectionPhoto
     }
     

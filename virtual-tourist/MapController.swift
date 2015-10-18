@@ -21,6 +21,8 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }()
     
+    var mapData = [Map]()
+    var pinData = [Pin]()
     var isEditingPins: Bool = false
     
     var editButton: UIBarButtonItem = UIBarButtonItem()
@@ -35,6 +37,9 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         
         setNavigationBar()
         setGestureRecognizer()
+        
+        initializeMap()
+        initializePins()
     }
     
     func setNavigationBar() {
@@ -42,20 +47,47 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func editAction() {
-        
         self.navigationBar.rightBarButtonItem = doneButton
-        
-        isEditingPins = true
         mapView.frame.origin.y -= deletePinsButton.frame.height
+        isEditingPins = true
         deletePinsButton.hidden = false
+        // Fetch pins to have up to date data
+        pinData = fetchPinData()
     }
     
     func doneAction() {
         self.navigationBar.rightBarButtonItem = editButton
-        
-        isEditingPins = false
         mapView.frame.origin.y += deletePinsButton.frame.height
+        isEditingPins = false
         deletePinsButton.hidden = true
+        // Save all changes to context
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    func fetchMapData() -> [Map] {
+        return DataHelper.getInstance().fetchData("Map") as! [Map]
+    }
+    
+    func fetchPinData() -> [Pin] {
+        return DataHelper.getInstance().fetchData("Pin") as! [Pin]
+    }
+    
+    func initializeMap() {
+        mapData = fetchMapData()
+        print("Number of maps in context: \(mapData.count)")
+        if mapData.count > 0 {
+            mapView.setRegion(mapData[0].region, animated: true)
+        } else {
+            saveMapToContext()
+        }
+    }
+    
+    func initializePins() {
+        pinData = fetchPinData()
+        print("Number of pins in context: \(mapData.count)")
+        for pin in pinData {
+            mapView.addAnnotation(pin.annotation)
+        }
     }
     
     func setGestureRecognizer() {
@@ -71,11 +103,43 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         
         let touchPoint = gestureRecognizer.locationInView(self.mapView)
         let coordinate = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
-
+        
+        // Add pin to map
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
         
+        // Save pin to context
+        savePinToContext(coordinate)
+    }
+    
+    func savePinToContext(coordinate: CLLocationCoordinate2D) {
+        let dictionary: [String: Double] = [
+            "latitude": coordinate.latitude,
+            "longitude": coordinate.longitude
+        ]
+        
+        let newPinData = Pin(dictionary: dictionary, context: sharedContext)
+        pinData.append(newPinData)
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    func removePinFromContext(annotation: MKPointAnnotation) {
+        // Fetch data to get most up to date pins
+        pinData = fetchPinData()
+        for index in 0...pinData.count {
+            let pin = pinData[index]
+            if
+                pin.annotation.coordinate.latitude == annotation.coordinate.latitude &&
+                pin.annotation.coordinate.longitude == annotation.coordinate.longitude
+            {
+                pinData.removeAtIndex(index)
+                sharedContext.deleteObject(pin)
+                print("Pin removed")
+                break
+            }
+        }
+
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -93,7 +157,9 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        print("Is editing \(isEditingPins)")
         if (isEditingPins) {
+            removePinFromContext(view.annotation as! MKPointAnnotation)
             mapView.removeAnnotation(view.annotation!)
         } else {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("locationPhotosVC") as! LocationPhotosController
@@ -102,13 +168,33 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         }
     }
     
+    func getCurrentMapValues() -> [String: Double] {
+        return [
+            "latitude": mapView.region.center.latitude,
+            "longitude": mapView.region.center.longitude,
+            "latitudeDelta": mapView.region.span.latitudeDelta,
+            "longitudeDelta": mapView.region.span.longitudeDelta
+        ]
+    }
+    
+    func saveMapToContext() {
+        let dictionary = getCurrentMapValues()
+        let newMapData = Map(dictionary: dictionary, context: sharedContext)
+        
+        mapData = [newMapData]
+        print("Saved in context")
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    func updateMapToContext() {
+        mapData[0].region = mapView.region
+        sharedContext.refreshObject(mapData[0], mergeChanges: true)
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         print("Map changed to new region")
-        print("Latitude: \(mapView.region.center.latitude)")
-        print("Longitude: \(mapView.region.center.longitude)")
-        print("Latitude Delta: \(mapView.region.span.latitudeDelta)")
-        print("Longitude Delta: \(mapView.region.span.longitudeDelta)")
+        updateMapToContext()
     }
     
 }
