@@ -153,17 +153,20 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         print("Saving photos in context: \(photos.count)")
         for photo in photos {
             let url = photo[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS] as! String
+            let id = photo["id"] as! String
 
             let dictionary: [String: String] = [
-                "url": url
+                "url": url,
+                "id": id
             ]
+            
             let newPhoto = Photo(dictionary: dictionary, context: sharedContext)
 
             photoData.append(newPhoto)
             print("Saved photos : \(photoData.count)")
-            CoreDataStackManager.sharedInstance().saveContext()
-        }
 
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
         print("Photos saved in context")
     }
     
@@ -185,13 +188,21 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
 
         if (indexPath.row < photoData.count) {
             let photo = photoData[indexPath.row]
-            let photoUrl = NSURL(string: photo.url)
             
-            //TODO
-            // Check if image has document if not request
-            if let image = NSData(contentsOfURL: photoUrl!) {
+            if let photoImage = photo.image {
+                print("Retrieveing from cache")
                 collectionPhoto.activityIndicator.stopAnimating()
-                collectionPhoto.photo.image = UIImage(data: image)
+                collectionPhoto.photo.image = photoImage
+            } else {
+                print("Requesting images")
+                let photoUrl = NSURL(string: photo.url)
+                if let image = NSData(contentsOfURL: photoUrl!) {
+                    let photoImage = UIImage(data: image)
+                    collectionPhoto.photo.image = photoImage
+                    collectionPhoto.activityIndicator.stopAnimating()
+                    photo.image = photoImage
+                    CoreDataStackManager.sharedInstance().saveContext()
+                }
             }
         }
         return collectionPhoto
