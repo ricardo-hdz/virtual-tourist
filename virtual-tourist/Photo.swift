@@ -40,4 +40,9 @@ class Photo: NSManagedObject {
         }
     }
     
+    override func prepareForDeletion() {
+        super.prepareForDeletion()
+        CacheHelper.getInstance().removeImage(id)
+    }
+    
 }

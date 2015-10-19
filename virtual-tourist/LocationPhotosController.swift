@@ -58,7 +58,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         if (photoData.count > 0) {
             // Display photos from context
             print("Reloading photos")
-            self.photoCollectionView.reloadData()
+            photoCollectionView.reloadData()
+            newCollectionButton.enabled = true
         } else {
             requestPhotosForLocation()
         }
@@ -101,27 +102,32 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     
     @IBAction func newPhotoCollection(sender: AnyObject) {
         currentPhotoPage += 1
-        //activityIndicator.startAnimating()
+
         photoCollectionView.hidden = true
         newCollectionButton.enabled = false
+        removePhotosFromContext(photoData)
+        photoData.removeAll()
         requestPhotosForLocation()
     }
     
     @IBAction func removePhotosAction(sender: AnyObject) {
         let selectedPhotos = photoCollectionView.indexPathsForSelectedItems()
+        var photosToRemove = [Photo]()
         for index in selectedPhotos! {
+            photosToRemove.append(photoData[index.row])
             photoData.removeAtIndex(index.row)
         }
         photoCollectionView.performBatchUpdates({self.photoCollectionView.deleteItemsAtIndexPaths(selectedPhotos!)}) { completion in
             print("Photos removed")
         }
+        removePhotosFromContext(photosToRemove)
+
         removePhotosButton.hidden = true
         newCollectionButton.hidden = false
         isEditingCollection = false
     }
     
     func requestPhotosForLocation() {
-        print("Requsting photos")
         let pageId = String(currentPhotoPage)
 
         PhotosHelper.getPhotosByLocation("\(locationCoordinate.latitude)", lon: "\(locationCoordinate.longitude)", page: pageId) { photos, error in
@@ -142,6 +148,7 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                     dispatch_async(dispatch_get_main_queue(), {
                         self.photoCollectionView.hidden = true
                         self.imagesNotFoundLabel.hidden = false
+                        self.newCollectionButton.enabled = false
                     })
                 }
             }
@@ -167,7 +174,13 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
 
         }
         CoreDataStackManager.sharedInstance().saveContext()
-        print("Photos saved in context")
+    }
+    
+    func removePhotosFromContext(photos: [Photo]) {
+        for photo in photos {
+            sharedContext.deleteObject(photo)
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     func backAction() {
