@@ -16,6 +16,9 @@ class Map: NSManagedObject {
     @NSManaged var latitudeDelta: Double
     @NSManaged var longitudeDelta: Double
     
+    //Relationships
+    @NSManaged var locations: [Pin]
+    
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
     }
