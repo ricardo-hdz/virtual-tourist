@@ -18,7 +18,7 @@
                     <connections>
                         <segue destination="Mpz-BH-fdm" kind="show" id="azj-Eh-iSh"/>
                         <segue destination="T1p-pg-xMr" kind="show" identifier="showPhotoLocations" id="Quz-hB-nTL"/>
-                        <segue destination="T1p-pg-xMr" kind="relationship" relationship="rootViewController" id="mIf-Dx-7Hy"/>
+                        <segue destination="Mpz-BH-fdm" kind="relationship" relationship="rootViewController" id="wEO-RZ-rc3"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xwa-7B-13s" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -139,11 +139,11 @@
                                     <size key="itemSize" width="100" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="2" minY="5" maxX="2" maxY="5"/>
+                                    <inset key="sectionInset" minX="2" minY="2" maxX="2" maxY="2"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoId" id="OIQ-YH-9r8" customClass="PhotoCell" customModule="virtual_tourist" customModuleProvider="target">
-                                        <rect key="frame" x="2" y="69" width="100" height="100"/>
+                                        <rect key="frame" x="2" y="66" width="100" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
@@ -158,7 +158,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="5xc-Qf-VYR" firstAttribute="centerX" secondItem="Pjh-cX-6AZ" secondAttribute="centerX" id="LJs-J9-oJE"/>
                                             <constraint firstItem="Pjh-cX-6AZ" firstAttribute="leading" secondItem="OIQ-YH-9r8" secondAttribute="leadingMargin" id="QQo-Ex-0kY"/>
@@ -224,9 +223,6 @@
                                     <action selector="newPhotoCollection:" destination="T1p-pg-xMr" eventType="touchUpInside" id="fo2-Mr-1X2"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="fOl-Eb-ZTe">
-                                <rect key="frame" x="290" y="290" width="20" height="20"/>
-                            </activityIndicatorView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No images found for this location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WGE-TF-Fzs">
                                 <rect key="frame" x="173" y="290" width="253" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -256,7 +252,6 @@
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="leading" secondItem="mRs-bp-zmY" secondAttribute="leadingMargin" constant="-20" id="MXX-NM-MEI"/>
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="leading" secondItem="cfU-oc-8jt" secondAttribute="leading" id="Mbq-IS-PKg"/>
                             <constraint firstItem="WGE-TF-Fzs" firstAttribute="top" secondItem="rBf-oc-fda" secondAttribute="bottom" constant="19" id="Nay-Cc-5aF"/>
-                            <constraint firstItem="fOl-Eb-ZTe" firstAttribute="top" secondItem="rBf-oc-fda" secondAttribute="bottom" constant="19" id="PKq-w0-Hth"/>
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="top" secondItem="4Eq-jh-JuC" secondAttribute="bottom" constant="106" id="RAs-UM-Hn6"/>
                             <constraint firstItem="jDy-IW-KBU" firstAttribute="leading" secondItem="cfU-oc-8jt" secondAttribute="leading" id="Ra2-qL-plD"/>
                             <constraint firstItem="pix-7g-Cc6" firstAttribute="top" secondItem="cfU-oc-8jt" secondAttribute="bottom" id="SwF-kL-zVk"/>
@@ -264,12 +259,10 @@
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="leading" secondItem="mRs-bp-zmY" secondAttribute="leadingMargin" constant="-20" id="TYg-dz-zyn"/>
                             <constraint firstItem="pix-7g-Cc6" firstAttribute="top" secondItem="cfU-oc-8jt" secondAttribute="bottom" id="Wo1-7a-jWP"/>
                             <constraint firstItem="pix-7g-Cc6" firstAttribute="top" secondItem="GAg-WC-1mx" secondAttribute="bottom" constant="44" id="YNI-Br-ZyA"/>
-                            <constraint firstItem="fOl-Eb-ZTe" firstAttribute="centerY" secondItem="mRs-bp-zmY" secondAttribute="centerY" id="ZRk-N7-4SR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GAg-WC-1mx" secondAttribute="trailing" constant="-20" id="cZn-hj-8bD"/>
                             <constraint firstItem="rBf-oc-fda" firstAttribute="trailing" secondItem="cfU-oc-8jt" secondAttribute="trailing" id="dFF-w0-Fiq"/>
                             <constraint firstItem="jDy-IW-KBU" firstAttribute="firstBaseline" secondItem="cfU-oc-8jt" secondAttribute="baseline" id="dYY-o0-QZb"/>
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="top" secondItem="mRs-bp-zmY" secondAttribute="topMargin" constant="247" id="fuK-DK-fk0"/>
-                            <constraint firstItem="fOl-Eb-ZTe" firstAttribute="centerX" secondItem="mRs-bp-zmY" secondAttribute="centerX" id="g2Q-kN-V9k"/>
                             <constraint firstItem="cfU-oc-8jt" firstAttribute="bottom" secondItem="mRs-bp-zmY" secondAttribute="bottomMargin" id="grV-ac-Hsl"/>
                             <constraint firstItem="jDy-IW-KBU" firstAttribute="baseline" secondItem="cfU-oc-8jt" secondAttribute="firstBaseline" id="hnE-RI-ejC"/>
                             <constraint firstItem="GAg-WC-1mx" firstAttribute="leading" secondItem="mRs-bp-zmY" secondAttribute="leadingMargin" id="jRN-oM-7Vv"/>
@@ -291,7 +284,6 @@
                                 <exclude reference="cZn-hj-8bD"/>
                                 <exclude reference="jRN-oM-7Vv"/>
                                 <exclude reference="Nay-Cc-5aF"/>
-                                <exclude reference="PKq-w0-Hth"/>
                                 <exclude reference="HXs-Oe-wA8"/>
                                 <exclude reference="grV-ac-Hsl"/>
                                 <exclude reference="2p9-sv-xyx"/>
@@ -310,8 +302,6 @@
                                 <include reference="RAs-UM-Hn6"/>
                                 <exclude reference="DoN-2g-86E"/>
                                 <include reference="Nay-Cc-5aF"/>
-                                <include reference="PKq-w0-Hth"/>
-                                <exclude reference="ZRk-N7-4SR"/>
                                 <include reference="HXs-Oe-wA8"/>
                                 <include reference="2p9-sv-xyx"/>
                             </mask>
@@ -321,7 +311,6 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="nkH-qM-Awo"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="fOl-Eb-ZTe" id="h9s-cg-Yzg"/>
                         <outlet property="imagesNotFoundLabel" destination="WGE-TF-Fzs" id="dlO-kg-FCf"/>
                         <outlet property="mapView" destination="rBf-oc-fda" id="WGa-sy-zdH"/>
                         <outlet property="navigationBar" destination="J5d-ho-XFG" id="8YJ-lB-Vxi"/>
@@ -336,6 +325,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="mIf-Dx-7Hy"/>
+        <segue reference="wEO-RZ-rc3"/>
     </inferredMetricsTieBreakers>
 </document>

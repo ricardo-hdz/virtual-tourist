@@ -39,7 +39,6 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         setGestureRecognizer()
         
         initializeMap()
-        initializePins()
     }
     
     func setNavigationBar() {
@@ -74,9 +73,10 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     
     func initializeMap() {
         mapData = fetchMapData()
-        print("Number of maps in context: \(mapData.count)")
+
         if mapData.count > 0 {
             mapView.setRegion(mapData[0].region, animated: true)
+            initializePins()
         } else {
             saveMapToContext()
         }
@@ -84,7 +84,7 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     
     func initializePins() {
         pinData = fetchPinData()
-        print("Number of pins in context: \(mapData.count)")
+
         for pin in pinData {
             mapView.addAnnotation(pin.annotation)
         }
@@ -120,8 +120,25 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         ]
         
         let newPinData = Pin(dictionary: dictionary, context: sharedContext)
+        newPinData.map = mapData[0]
         pinData.append(newPinData)
+        
         CoreDataStackManager.sharedInstance().saveContext()
+        
+        // Prefetch photos for location
+        prefetchPhotosForLocation(newPinData)
+    }
+    
+    func prefetchPhotosForLocation(location: Pin) {
+        PhotosHelper.getPhotosByLocation("\(location.latitude)", lon: "\(location.longitude)", page: "1") { photos, error in
+            if let error = error {
+                print("Error: " + error.localizedDescription)
+            } else {
+                if photos?.count > 0 {
+                    DataHelper.getInstance().savePhotosForLocation(location, photos: photos!)
+                }
+            }
+        }
     }
     
     func removePinFromContext(annotation: MKPointAnnotation) {
@@ -139,8 +156,9 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
                 break
             }
         }
-
     }
+    
+    
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         let pinId = "pin"
@@ -163,7 +181,18 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
             mapView.removeAnnotation(view.annotation!)
         } else {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("locationPhotosVC") as! LocationPhotosController
-            controller.locationCoordinate = (view.annotation?.coordinate)!
+            
+            for index in 0...pinData.count {
+                let pin = pinData[index]
+                if
+                    pin.annotation.coordinate.latitude == view.annotation?.coordinate.latitude &&
+                    pin.annotation.coordinate.longitude == view.annotation?.coordinate.longitude
+                {
+                    controller.location = pin
+                    break
+                }
+            }
+            
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
@@ -180,9 +209,8 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     func saveMapToContext() {
         let dictionary = getCurrentMapValues()
         let newMapData = Map(dictionary: dictionary, context: sharedContext)
-        
+
         mapData = [newMapData]
-        print("Saved in context")
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
@@ -193,7 +221,6 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("Map changed to new region")
         updateMapToContext()
     }
     

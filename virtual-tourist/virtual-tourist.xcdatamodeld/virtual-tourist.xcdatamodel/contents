@@ -5,19 +5,19 @@
         <attribute name="latitudeDelta" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitudeDelta" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pin" inverseName="map" inverseEntity="Pin" syncable="YES"/>
+        <relationship name="locations" toMany="YES" deletionRule="Nullify" destinationEntity="Pin" inverseName="map" inverseEntity="Pin" syncable="YES"/>
     </entity>
     <entity name="Photo" representedClassName=".Photo" syncable="YES">
         <attribute name="documentPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin" syncable="YES"/>
+        <relationship name="location" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin" syncable="YES"/>
     </entity>
     <entity name="Pin" representedClassName=".Pin" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="map" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Map" inverseName="locations" inverseEntity="Map" syncable="YES"/>
-        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="location" inverseEntity="Photo" syncable="YES"/>
+        <relationship name="map" maxCount="1" deletionRule="Nullify" destinationEntity="Map" inverseName="locations" inverseEntity="Map" syncable="YES"/>
+        <relationship name="photos" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Photo" inverseName="location" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
         <element name="Map" positionX="-63" positionY="-18" width="128" height="120"/>

@@ -32,14 +32,23 @@ class Pin: NSManagedObject {
     
     var annotation: MKPointAnnotation {
         get {
-            let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
             let annotationInstance = MKPointAnnotation()
-            annotationInstance.coordinate = coordinate
+            annotationInstance.coordinate = self.coordinate
             return annotationInstance
         }
         set {
             latitude = newValue.coordinate.latitude
             longitude = newValue.coordinate.longitude
+        }
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        get {
+            return CLLocationCoordinate2DMake(latitude, longitude)
+        }
+        set {
+            latitude = newValue.latitude
+            longitude = newValue.longitude
         }
     }
 }

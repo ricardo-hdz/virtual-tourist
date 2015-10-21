@@ -31,5 +31,24 @@ class DataHelper: NSObject {
             return [AnyObject]()
         }
     }
+    
+    func savePhotosForLocation(location: Pin, photos: [[String: AnyObject]]) {
+        for photo in photos {
+            let url = photo[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS] as! String
+            let id = photo["id"] as! String
+            
+            let dictionary: [String: String] = [
+                "url": url,
+                "id": id
+            ]
+            
+            let newPhoto = Photo(dictionary: dictionary, context: sharedContext)
+            
+            newPhoto.location = location
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    
 
 }
