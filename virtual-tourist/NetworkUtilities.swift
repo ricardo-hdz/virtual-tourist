@@ -10,7 +10,6 @@ import Foundation
 
 extension NetworkRequestHelper {
     
-    
     func parseJSONBody(body: [String:AnyObject]?) -> NSData? {
         do {
             return try NSJSONSerialization.dataWithJSONObject(body!, options: [])

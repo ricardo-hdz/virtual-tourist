@@ -28,7 +28,6 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     @IBOutlet weak var removePhotosButton: UIButton!
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var imagesNotFoundLabel: UILabel!
     
@@ -36,21 +35,24 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }()
     
+    var session : NSURLSession = NSURLSession.sharedSession()
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         imagesNotFoundLabel.hidden = true
         newCollectionButton.enabled = false
         setNavigationItems()
         initializeMap()
-        
         initializeCollectionView()
 
-        if (location.photos.count > 0) {
-            newCollectionButton.enabled = true
-        } else {
-            requestPhotosForLocation()
+        if (location.photos.count == 0) {
+            // Display no photos label
+            self.photoCollectionView.hidden = true
+            self.imagesNotFoundLabel.hidden = false
+            self.newCollectionButton.enabled = false
         }
-        
     }
     
     func setNavigationItems() {
@@ -58,6 +60,10 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         self.navigationBar.backBarButtonItem = backButton
     }
     
+    func backAction() {
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
+
     func initializeMap() {
         mapView.delegate = self
         mapView.zoomEnabled = false
@@ -82,13 +88,12 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     
     func displaySelectedLocation() {
         let mapSpan = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
-        let mapRegion = MKCoordinateRegion(center: location.coordinate, span: mapSpan)
-        mapView.setRegion(mapRegion, animated: true)
-        mapView.addAnnotation(location!.annotation)
+        let mapRegion = MKCoordinateRegion(center: self.location.coordinate, span: mapSpan)
+        self.mapView.setRegion(mapRegion, animated: false)
+        self.mapView.addAnnotation(self.location!.annotation)
     }
     
     func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView]) {
-        // Request images as soon as location is displayed
         loadPhotoData()
     }
     
@@ -98,24 +103,27 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         for indexPath in indexVisibleCells {
             let photo = location.photos[indexPath.row]
             if photo.image == nil {
-                print("Requesting images")
-                let photoUrl = NSURL(string: photo.url)
-                if let image = NSData(contentsOfURL: photoUrl!) {
-                    let photoImage = UIImage(data: image)
-                    photo.image = photoImage
+                PhotosHelper.getImage(photo.url) {image, error in
+                    if let _ = error {
+                        //display placeholder
+                    } else {
+                        photo.image = image!
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.photoCollectionView.reloadItemsAtIndexPaths([indexPath])
+                        })
+                    }
                 }
             }
         }
+        
         CoreDataStackManager.sharedInstance().saveContext()
-        photoCollectionView.reloadItemsAtIndexPaths(indexVisibleCells)
+        newCollectionButton.enabled = true
     }
     
     @IBAction func newPhotoCollection(sender: AnyObject) {
         currentPhotoPage += 1
-
-        photoCollectionView.hidden = true
         newCollectionButton.enabled = false
-        removePhotosFromContext(location.photos)
+        DataHelper.getInstance().removePhotos(location.photos)
         requestPhotosForLocation()
     }
     
@@ -140,21 +148,21 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     
     func requestPhotosForLocation() {
         let pageId = String(currentPhotoPage)
-
         PhotosHelper.getPhotosByLocation("\(location!.latitude)", lon: "\(location!.longitude)", page: pageId) { photos, error in
             if let error = error {
                 print("Couldn't get photos for this location. Please try again.")
                 print("Error: " + error.localizedDescription)
-                //self.activityIndicator.stopAnimating()
             } else {
                 if photos?.count > 0 {
                     DataHelper.getInstance().savePhotosForLocation(self.location, photos: photos!)
-
                     dispatch_async(dispatch_get_main_queue(), {
                         self.photoCollectionView.reloadData()
-                        self.photoCollectionView.hidden = false
-                        self.newCollectionButton.enabled = true
                     })
+                    self.newCollectionButton.enabled = true
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.loadPhotoData()
+                    })
+                    
                 } else {
                     dispatch_async(dispatch_get_main_queue(), {
                         self.photoCollectionView.hidden = true
@@ -166,19 +174,7 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         }
     }
     
-    func removePhotosFromContext(photos: [Photo]) {
-        for photo in photos {
-            sharedContext.deleteObject(photo)
-        }
-        CoreDataStackManager.sharedInstance().saveContext()
-    }
-    
-    func backAction() {
-        self.navigationController?.popToRootViewControllerAnimated(true)
-    }
-    
     // Collection View Delegate Methods
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return location.photos.count
     }
@@ -186,12 +182,15 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let photoId = "photoId"
         let collectionPhoto = collectionView.dequeueReusableCellWithReuseIdentifier(photoId, forIndexPath: indexPath) as! PhotoCell
-        collectionPhoto.backgroundColor = UIColor.grayColor()
         
         let photo = location.photos[indexPath.row]
         if let photoImage = photo.image {
             collectionPhoto.activityIndicator.stopAnimating()
             collectionPhoto.photo.image = photoImage
+            collectionPhoto.photo.alpha = 1.0
+        } else {
+            collectionPhoto.photo.alpha = 0.5
+            collectionPhoto.activityIndicator.startAnimating()
         }
         
         return collectionPhoto
@@ -204,7 +203,6 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if !isEditingCollection {
             isEditingCollection = true
-            // display button
             removePhotosButton.hidden = false
             newCollectionButton.hidden = true
         }
@@ -214,7 +212,6 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
     }
     
     func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
-        // check for total items selected, if == 0 the hide button
         let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotoCell
         cell.highlighted = false
         
@@ -225,8 +222,4 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
             isEditingCollection = false
         }
     }
-    
-    
-    
-
 }

@@ -30,7 +30,7 @@ extension NetworkRequestHelper {
             static let FORMAT = "json"
             static let JSON_CALLBACK = "1"
             static let EXTRAS = "url_m"
-            static let PER_PAGE = "3"
+            static let PER_PAGE = "20"
         }
         
         struct SEARCH_PHOTOS_RESPONSE_KEYS {
@@ -38,5 +38,16 @@ extension NetworkRequestHelper {
             static let PHOTO = "photo"
             static let TOTAL = "total"
         }
+    }
+    
+    class func getDefaultFlickrParams() -> [String:String] {
+        return [
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.METHOD: NetworkRequestHelper.Constants.SEARCH_PHOTOS_METHOD,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.API_KEY: NetworkRequestHelper.Constants.API_KEY,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.FORMAT: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.FORMAT,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.EXTRAS: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.JSON_CALLBACK: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.JSON_CALLBACK,
+            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PER_PAGE: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.PER_PAGE
+        ]
     }
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2015 Ricardo Hdz. All rights reserved.
 //
 
-import Foundation
 import CoreData
 
 class DataHelper: NSObject {
@@ -45,6 +44,13 @@ class DataHelper: NSObject {
             let newPhoto = Photo(dictionary: dictionary, context: sharedContext)
             
             newPhoto.location = location
+        }
+        CoreDataStackManager.sharedInstance().saveContext()
+    }
+    
+    func removePhotos(photos: [Photo]) {
+        for photo in photos {
+            sharedContext.deleteObject(photo)
         }
         CoreDataStackManager.sharedInstance().saveContext()
     }

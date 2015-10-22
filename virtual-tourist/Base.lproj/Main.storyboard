@@ -45,7 +45,7 @@
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PV3-EA-lEM">
                                 <rect key="frame" x="0.0" y="558" width="600" height="42"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.16078431369999999" green="0.28235294119999998" blue="0.37647058820000001" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="KBa-lj-ISe"/>
                                     <constraint firstAttribute="width" constant="600" id="dq9-GP-ShT"/>
@@ -149,22 +149,23 @@
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pjh-cX-6AZ">
-                                                    <rect key="frame" x="8" y="8" width="84" height="84"/>
-                                                </imageView>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="5xc-Qf-VYR">
                                                     <rect key="frame" x="40" y="40" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pjh-cX-6AZ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" red="0.16078431372549018" green="0.28235294117647058" blue="0.37647058823529411" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstItem="5xc-Qf-VYR" firstAttribute="centerX" secondItem="Pjh-cX-6AZ" secondAttribute="centerX" id="LJs-J9-oJE"/>
-                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="leading" secondItem="OIQ-YH-9r8" secondAttribute="leadingMargin" id="QQo-Ex-0kY"/>
-                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="top" secondItem="OIQ-YH-9r8" secondAttribute="topMargin" id="eX9-hI-INY"/>
-                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="trailing" secondItem="OIQ-YH-9r8" secondAttribute="trailingMargin" id="jOx-HE-caD"/>
-                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="bottom" secondItem="OIQ-YH-9r8" secondAttribute="bottomMargin" id="nuj-xh-o3j"/>
-                                            <constraint firstItem="5xc-Qf-VYR" firstAttribute="centerY" secondItem="Pjh-cX-6AZ" secondAttribute="centerY" id="o8q-hn-7a6"/>
+                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="centerY" secondItem="5xc-Qf-VYR" secondAttribute="centerY" id="Nus-cu-hnV"/>
+                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="top" secondItem="OIQ-YH-9r8" secondAttribute="top" id="XRB-sk-l7h"/>
+                                            <constraint firstAttribute="bottom" secondItem="Pjh-cX-6AZ" secondAttribute="bottom" id="doP-PG-Qur"/>
+                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="centerX" secondItem="5xc-Qf-VYR" secondAttribute="centerX" id="ryJ-cC-upA"/>
+                                            <constraint firstItem="Pjh-cX-6AZ" firstAttribute="leading" secondItem="OIQ-YH-9r8" secondAttribute="leading" id="tBM-cR-e2s"/>
+                                            <constraint firstAttribute="trailing" secondItem="Pjh-cX-6AZ" secondAttribute="trailing" id="wBC-ik-BmB"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="activityIndicator" destination="5xc-Qf-VYR" id="vUY-NQ-6hW"/>
@@ -200,14 +201,16 @@
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cfU-oc-8jt">
                                 <rect key="frame" x="0.0" y="555" width="600" height="45"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.16078431369999999" green="0.28235294119999998" blue="0.37647058820000001" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="137-2K-vOv"/>
                                     <constraint firstAttribute="height" constant="45" id="DPG-oF-Hsj"/>
                                     <constraint firstAttribute="height" constant="45" id="rdF-fk-UfJ"/>
                                     <constraint firstAttribute="width" constant="600" id="vJM-mC-VgR"/>
                                 </constraints>
-                                <state key="normal" title="New Collection"/>
+                                <state key="normal" title="New Collection">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="137-2K-vOv"/>
@@ -231,8 +234,10 @@
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jDy-IW-KBU">
                                 <rect key="frame" x="0.0" y="555" width="600" height="45"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Remove Photos"/>
+                                <color key="backgroundColor" red="0.16078431369999999" green="0.28235294119999998" blue="0.37647058820000001" alpha="0.90000000000000002" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Remove Photos">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="removePhotosAction:" destination="T1p-pg-xMr" eventType="touchUpInside" id="Wbu-FE-MIQ"/>
                                 </connections>

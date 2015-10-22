@@ -42,8 +42,7 @@ class NetworkRequestHelper: NSObject {
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if let error = error {
-                print("Error while making network request to endpoint : " + serviceEndpoint)
-                print("Error: " + error.localizedDescription)
+                callback(result: nil, error: error)
             } else {
                 self.parseReponseData(data!, postProcessor: postProcessor, callback: callback)
             }
@@ -52,5 +51,17 @@ class NetworkRequestHelper: NSObject {
         task.resume()
         return task
     }
-
+    
+    func dataRequest(url: String, callback: (data: NSData?, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let url = NSURL(string: url)
+        let task = session.dataTaskWithURL(url!) { data, response, error in
+            if let error = error {
+                callback(data: nil, error: error)
+            } else {
+                callback(data: data, error: nil)
+            }
+        }
+        task.resume()
+        return task
+    }
 }

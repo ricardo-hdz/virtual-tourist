@@ -7,24 +7,18 @@
 //
 
 import Foundation
+import UIKit
 
 class PhotosHelper: NSObject {
 
     class func getPhotosByLocation(lat: String, lon: String, page: String, callback: (photos: [[String: AnyObject]]?, error: NSError?) -> Void) {
         let requestHelper = NetworkRequestHelper.getInstance()
         
-        let requestParams = [
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.METHOD: NetworkRequestHelper.Constants.SEARCH_PHOTOS_METHOD,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.API_KEY: NetworkRequestHelper.Constants.API_KEY,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LAT: lat,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LON: lon,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.FORMAT: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.FORMAT,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.EXTRAS: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.EXTRAS,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.JSON_CALLBACK: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.JSON_CALLBACK,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PER_PAGE: NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARG_VALUES.PER_PAGE,
-            NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PAGE: page
-        ]
-        
+        var requestParams = NetworkRequestHelper.getDefaultFlickrParams()
+        requestParams[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LAT] = lat
+        requestParams[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.LON] = lon
+        requestParams[NetworkRequestHelper.Constants.SEARCH_PHOTOS_ARGUMENTS.PAGE] = page
+
         let urlString: String = NetworkRequestHelper.Constants.FLICKR_API + requestHelper.escapeParams(requestParams)
         
         let headers: NSMutableDictionary = [:]
@@ -45,6 +39,19 @@ class PhotosHelper: NSObject {
                     photoCollection = photos.valueForKey(NetworkRequestHelper.Constants.SEARCH_PHOTOS_RESPONSE_KEYS.PHOTO) as! [[String: AnyObject]]
                 }
                 callback(photos: photoCollection, error: nil)
+            }
+        }
+    }
+    
+    class func getImage(url: String, callback: (image: UIImage?, error: NSError?) -> Void) {
+        let requestHelper = NetworkRequestHelper.getInstance()
+        let _ = requestHelper.dataRequest(url) {data, error in
+            if let error = error {
+                print("Error while requesting image at URL: \(url)")
+                callback(image: nil, error: error)
+            } else {
+                let image = UIImage(data: data!)
+                callback(image: image, error: nil)
             }
         }
     }

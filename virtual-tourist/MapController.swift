@@ -22,7 +22,6 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }()
     
     var mapData = [Map]()
-    var pinData = [Pin]()
     var isEditingPins: Bool = false
     
     var editButton: UIBarButtonItem = UIBarButtonItem()
@@ -50,8 +49,6 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         mapView.frame.origin.y -= deletePinsButton.frame.height
         isEditingPins = true
         deletePinsButton.hidden = false
-        // Fetch pins to have up to date data
-        pinData = fetchPinData()
     }
     
     func doneAction() {
@@ -59,16 +56,12 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         mapView.frame.origin.y += deletePinsButton.frame.height
         isEditingPins = false
         deletePinsButton.hidden = true
-        // Save all changes to context
+        // Save all changes to context at once
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
     func fetchMapData() -> [Map] {
         return DataHelper.getInstance().fetchData("Map") as! [Map]
-    }
-    
-    func fetchPinData() -> [Pin] {
-        return DataHelper.getInstance().fetchData("Pin") as! [Pin]
     }
     
     func initializeMap() {
@@ -83,9 +76,7 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func initializePins() {
-        pinData = fetchPinData()
-
-        for pin in pinData {
+        for pin in mapData[0].locations {
             mapView.addAnnotation(pin.annotation)
         }
     }
@@ -97,7 +88,7 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func dropMapPin(gestureRecognizer: UIGestureRecognizer) {
-        if gestureRecognizer.state != UIGestureRecognizerState.Began {
+        if gestureRecognizer.state != UIGestureRecognizerState.Began || isEditingPins {
             return
         }
         
@@ -109,11 +100,13 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
         
-        // Save pin to context
-        savePinToContext(coordinate)
+        let pin = createNewLocation(coordinate)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        prefetchPhotosForLocation(pin)
     }
     
-    func savePinToContext(coordinate: CLLocationCoordinate2D) {
+    func createNewLocation(coordinate: CLLocationCoordinate2D) -> Pin {
         let dictionary: [String: Double] = [
             "latitude": coordinate.latitude,
             "longitude": coordinate.longitude
@@ -121,12 +114,7 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         
         let newPinData = Pin(dictionary: dictionary, context: sharedContext)
         newPinData.map = mapData[0]
-        pinData.append(newPinData)
-        
-        CoreDataStackManager.sharedInstance().saveContext()
-        
-        // Prefetch photos for location
-        prefetchPhotosForLocation(newPinData)
+        return newPinData
     }
     
     func prefetchPhotosForLocation(location: Pin) {
@@ -142,22 +130,16 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func removePinFromContext(annotation: MKPointAnnotation) {
-        // Fetch data to get most up to date pins
-        pinData = fetchPinData()
-        for index in 0...pinData.count {
-            let pin = pinData[index]
+        for pin in mapData[0].locations {
             if
                 pin.annotation.coordinate.latitude == annotation.coordinate.latitude &&
                 pin.annotation.coordinate.longitude == annotation.coordinate.longitude
             {
-                pinData.removeAtIndex(index)
                 sharedContext.deleteObject(pin)
-                print("Pin removed")
                 break
             }
         }
     }
-    
     
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -175,15 +157,12 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        print("Is editing \(isEditingPins)")
         if (isEditingPins) {
             removePinFromContext(view.annotation as! MKPointAnnotation)
             mapView.removeAnnotation(view.annotation!)
         } else {
             let controller = self.storyboard?.instantiateViewControllerWithIdentifier("locationPhotosVC") as! LocationPhotosController
-            
-            for index in 0...pinData.count {
-                let pin = pinData[index]
+            for pin in mapData[0].locations {
                 if
                     pin.annotation.coordinate.latitude == view.annotation?.coordinate.latitude &&
                     pin.annotation.coordinate.longitude == view.annotation?.coordinate.longitude
