@@ -23,13 +23,13 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     
     var mapData = [Map]()
     var isEditingPins: Bool = false
-    
+    var pin: Pin?
+    var annotation: MKPointAnnotation?
     var editButton: UIBarButtonItem = UIBarButtonItem()
     var doneButton: UIBarButtonItem = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        deletePinsButton.hidden = true
         
         editButton = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: "editAction")
         doneButton = UIBarButtonItem(title: "Done", style: .Plain, target: self, action: "doneAction")
@@ -40,22 +40,39 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
         initializeMap()
     }
     
+    override func viewDidLayoutSubviews() {
+        if let button = deletePinsButton {
+            button.center.y += self.view.bounds.height
+        }
+    }
+    
+    func showDeletePinsButton() {
+        UIView.animateWithDuration(0.3, animations: {
+            self.deletePinsButton.center.y -= self.view.bounds.height
+        })
+    }
+    
+    func hideDeletePinsButton() {
+        UIView.animateWithDuration(0.3, animations: {
+            self.deletePinsButton.center.y += self.view.bounds.height
+        })
+    }
+    
     func setNavigationBar() {
         self.navigationBar.rightBarButtonItem = editButton
     }
     
     func editAction() {
         self.navigationBar.rightBarButtonItem = doneButton
-        mapView.frame.origin.y -= deletePinsButton.frame.height
+        showDeletePinsButton()
         isEditingPins = true
-        deletePinsButton.hidden = false
     }
     
     func doneAction() {
         self.navigationBar.rightBarButtonItem = editButton
-        mapView.frame.origin.y += deletePinsButton.frame.height
+        hideDeletePinsButton()
         isEditingPins = false
-        deletePinsButton.hidden = true
+        
         // Save all changes to context at once
         CoreDataStackManager.sharedInstance().saveContext()
     }
@@ -88,22 +105,38 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     }
     
     func dropMapPin(gestureRecognizer: UIGestureRecognizer) {
-        if gestureRecognizer.state != UIGestureRecognizerState.Began || isEditingPins {
-            return
+        switch gestureRecognizer.state {
+            case UIGestureRecognizerState.Began:
+                if !isEditingPins {
+                    let coordinate = getCoordinateFromPoint(gestureRecognizer.locationInView(self.mapView))
+                    insertAnnotation(coordinate)
+                    pin = createNewLocation(coordinate)
+                }
+                break
+            case UIGestureRecognizerState.Changed:
+                if mapView.annotations.count > 0 {
+                    mapView.removeAnnotation(annotation!)
+                    let coordinate = getCoordinateFromPoint(gestureRecognizer.locationInView(self.mapView))
+                    insertAnnotation(coordinate)
+                    pin!.coordinate = coordinate
+                }
+            break
+            case UIGestureRecognizerState.Ended:
+                CoreDataStackManager.sharedInstance().saveContext()
+                prefetchPhotosForLocation(pin!)
+            break
+            default: break
         }
-        
-        let touchPoint = gestureRecognizer.locationInView(self.mapView)
-        let coordinate = self.mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
-        
-        // Add pin to map
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        mapView.addAnnotation(annotation)
-        
-        let pin = createNewLocation(coordinate)
-        CoreDataStackManager.sharedInstance().saveContext()
-        
-        prefetchPhotosForLocation(pin)
+    }
+    
+    func getCoordinateFromPoint(point: CGPoint) -> CLLocationCoordinate2D {
+        return self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
+    }
+    
+    func insertAnnotation(coordinate: CLLocationCoordinate2D) {
+        annotation = MKPointAnnotation()
+        annotation!.coordinate = coordinate
+        mapView.addAnnotation(annotation!)
     }
     
     func createNewLocation(coordinate: CLLocationCoordinate2D) -> Pin {
@@ -202,5 +235,4 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         updateMapToContext()
     }
-    
 }
