@@ -93,15 +93,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         self.mapView.addAnnotation(self.location!.annotation)
     }
     
-    func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView]) {
-        loadPhotoData()
-    }
-    
-    func loadPhotoData() {
-        let indexVisibleCells = photoCollectionView.indexPathsForVisibleItems()
-        
-        for indexPath in indexVisibleCells {
-            let photo = location.photos[indexPath.row]
+    func loadPhotoDataForCell(indexPath: NSIndexPath) {
+        let photo = location.photos[indexPath.row]
             if photo.image == nil {
                 PhotosHelper.getImage(photo.url) {image, error in
                     if let _ = error {
@@ -114,7 +107,6 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                     }
                 }
             }
-        }
         
         CoreDataStackManager.sharedInstance().saveContext()
         newCollectionButton.enabled = true
@@ -159,10 +151,6 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                         self.photoCollectionView.reloadData()
                     })
                     self.newCollectionButton.enabled = true
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.loadPhotoData()
-                    })
-                    
                 } else {
                     dispatch_async(dispatch_get_main_queue(), {
                         self.photoCollectionView.hidden = true
@@ -191,6 +179,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         } else {
             collectionPhoto.photo.alpha = 0.5
             collectionPhoto.activityIndicator.startAnimating()
+            //request image
+            loadPhotoDataForCell(indexPath)
         }
         
         return collectionPhoto
