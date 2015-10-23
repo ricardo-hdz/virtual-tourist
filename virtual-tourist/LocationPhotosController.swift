@@ -100,8 +100,9 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                     if let _ = error {
                         //display placeholder
                     } else {
-                        photo.image = image!
+                        
                         dispatch_async(dispatch_get_main_queue(), {
+                            photo.image = image!
                             self.photoCollectionView.reloadItemsAtIndexPaths([indexPath])
                         })
                     }
@@ -146,8 +147,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
                 print("Error: " + error.localizedDescription)
             } else {
                 if photos?.count > 0 {
-                    DataHelper.getInstance().savePhotosForLocation(self.location, photos: photos!)
                     dispatch_async(dispatch_get_main_queue(), {
+                        DataHelper.getInstance().savePhotosForLocation(self.location, photos: photos!)
                         self.photoCollectionView.reloadData()
                     })
                     self.newCollectionButton.enabled = true
@@ -179,10 +180,8 @@ class LocationPhotosController: UIViewController, UINavigationControllerDelegate
         } else {
             collectionPhoto.photo.alpha = 0.5
             collectionPhoto.activityIndicator.startAnimating()
-            //request image
             loadPhotoDataForCell(indexPath)
         }
-        
         return collectionPhoto
     }
     

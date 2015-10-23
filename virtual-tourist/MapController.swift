@@ -156,7 +156,9 @@ class MapController: UIViewController, UINavigationControllerDelegate, MKMapView
                 print("Error: " + error.localizedDescription)
             } else {
                 if photos?.count > 0 {
-                    DataHelper.getInstance().savePhotosForLocation(location, photos: photos!)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        DataHelper.getInstance().savePhotosForLocation(location, photos: photos!)
+                    })
                 }
             }
         }
